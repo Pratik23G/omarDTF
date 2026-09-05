@@ -1,0 +1,48 @@
+import type { Product } from "@omardtf/shared-types";
+
+export const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "Classic DTF Tee",
+    description: "Soft cotton tee with a full-color DTF transfer of your design.",
+    price: 24.99,
+    images: ["https://placehold.co/400x400?text=Classic+Tee"],
+    category: "T-Shirts",
+    inStock: true,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White", "Navy"],
+  },
+  {
+    id: "2",
+    name: "Custom Hoodie",
+    description: "Heavyweight hoodie, perfect for bold custom designs.",
+    price: 44.99,
+    images: ["https://placehold.co/400x400?text=Hoodie"],
+    category: "Hoodies",
+    inStock: true,
+    sizes: ["S", "M", "L", "XL", "2XL"],
+    colors: ["Black", "Charcoal"],
+  },
+  {
+    id: "3",
+    name: "Business Logo Polo",
+    description: "Embroidered-look DTF polo, popular for branded team orders.",
+    price: 29.99,
+    images: ["https://placehold.co/400x400?text=Polo"],
+    category: "Business",
+    inStock: true,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["White", "Navy", "Gray"],
+  },
+  {
+    id: "4",
+    name: "Kids DTF Tee",
+    description: "Custom transfer tee sized for kids, great for events and teams.",
+    price: 18.99,
+    images: ["https://placehold.co/400x400?text=Kids+Tee"],
+    category: "Kids",
+    inStock: true,
+    sizes: ["XS", "S", "M"],
+    colors: ["White", "Pink", "Blue"],
+  },
+];
