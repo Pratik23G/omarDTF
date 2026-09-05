@@ -1,1 +1,19 @@
+# dependencies
 node_modules
+
+# build output / cache
+.next
+.turbo
+dist
+out
+
+# env files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+
+# OS junk
+.DS_Store
