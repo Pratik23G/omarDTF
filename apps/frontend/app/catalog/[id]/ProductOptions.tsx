@@ -2,10 +2,19 @@
 
 import { useState } from "react";
 import type { Product } from "@omardtf/shared-types";
+import { useCartStore } from "@/lib/cart-store";
 
 export default function ProductOptions({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes[0]);
   const [color, setColor] = useState(product.colors[0]);
+  const [added, setAdded] = useState(false);
+  const addItem = useCartStore((state) => state.addItem);
+
+  function handleAddToCart() {
+    addItem(product, size, color);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  }
 
   return (
     <div className="mt-6 space-y-4">
@@ -46,11 +55,10 @@ export default function ProductOptions({ product }: { product: Product }) {
         </div>
       </div>
       <button
-        disabled
-        title="Cart comes in the next step"
-        className="mt-2 w-full cursor-not-allowed rounded-md bg-gray-300 px-4 py-3 font-medium text-white"
+        onClick={handleAddToCart}
+        className="mt-2 w-full rounded-md bg-gray-900 px-4 py-3 font-medium text-white transition hover:bg-gray-700"
       >
-        Add to Cart (coming soon)
+        {added ? "Added!" : "Add to Cart"}
       </button>
     </div>
   );

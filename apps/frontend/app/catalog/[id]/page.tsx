@@ -7,12 +7,13 @@ export function generateStaticParams() {
   return mockProducts.map((product) => ({ id: product.id }));
 }
 
-export default function ProductDetailPage({
+export default async function ProductDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const product = mockProducts.find((p) => p.id === params.id);
+  const { id } = await params;
+  const product = mockProducts.find((p) => p.id === id);
   if (!product) notFound();
 
   return (
