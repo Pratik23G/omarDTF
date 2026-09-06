@@ -111,8 +111,8 @@ omardtf/
 ### Phase 1 — Core E-Commerce (Prompts 1–6)
 
 - [x] Prompt 1: Shared TypeScript types in packages/shared-types
-- [ ] Prompt 2: Frontend homepage (hero, product grid)
-- [ ] Prompt 3: Catalog + product detail pages + design upload
+- [x] Prompt 2: Frontend homepage (hero, product grid)
+- [x] Prompt 3: Catalog + product detail pages + design upload
 - [ ] Prompt 4: Cart state with Zustand
 - [ ] Prompt 5: Hono API backend with mock data
 - [ ] Prompt 6: Connect frontend to API
