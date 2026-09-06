@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CartLink from "./CartLink";
 
 export default function Header() {
   return (
@@ -14,6 +15,7 @@ export default function Header() {
           <Link href="/catalog" className="hover:text-gray-600">
             Catalog
           </Link>
+          <CartLink />
         </nav>
       </div>
     </header>
