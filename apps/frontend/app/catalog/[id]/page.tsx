@@ -1,11 +1,7 @@
 import { notFound } from "next/navigation";
-import { mockProducts } from "@/lib/mock-products";
+import { getProduct } from "@/lib/api";
 import DesignUploader from "./DesignUploader";
 import ProductOptions from "./ProductOptions";
-
-export function generateStaticParams() {
-  return mockProducts.map((product) => ({ id: product.id }));
-}
 
 export default async function ProductDetailPage({
   params,
@@ -13,7 +9,7 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = mockProducts.find((p) => p.id === id);
+  const product = await getProduct(id);
   if (!product) notFound();
 
   return (

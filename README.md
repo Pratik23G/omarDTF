@@ -114,8 +114,8 @@ omardtf/
 - [x] Prompt 2: Frontend homepage (hero, product grid)
 - [x] Prompt 3: Catalog + product detail pages + design upload
 - [x] Prompt 4: Cart state with Zustand
-- [ ] Prompt 5: Hono API backend with mock data
-- [ ] Prompt 6: Connect frontend to API
+- [x] Prompt 5: Hono API backend with mock data
+- [x] Prompt 6: Connect frontend to API
 
 ### Phase 2 — Payments (Prompts 7–9)
 
