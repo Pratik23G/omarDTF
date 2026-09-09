@@ -4,6 +4,13 @@ import { cors } from "hono/cors";
 import { products } from "./routes/products.js";
 import { orders } from "./routes/orders.js";
 import { quotes } from "./routes/quotes.js";
+import { payments } from "./routes/payments.js";
+
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file present (e.g. in prod where vars are set directly)
+}
 
 const app = new Hono();
 
@@ -14,6 +21,7 @@ app.get("/", (c) => c.json({ status: "ok", service: "omardtf-api" }));
 app.route("/products", products);
 app.route("/orders", orders);
 app.route("/quotes", quotes);
+app.route("/payments", payments);
 
 const port = Number(process.env.PORT ?? 3001);
 

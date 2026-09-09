@@ -18,15 +18,19 @@ export default async function ProductDetailPage({
         <img
           src={product.images[0]}
           alt={product.name}
-          className="aspect-square w-full rounded-lg object-cover"
+          className="aspect-square w-full border border-neutral-300 object-cover"
         />
         <div>
-          <p className="text-sm text-gray-500">{product.category}</p>
-          <h1 className="mt-1 text-3xl font-bold">{product.name}</h1>
+          <p className="text-xs uppercase tracking-[0.15em] text-neutral-500">
+            {product.category}
+          </p>
+          <h1 className="mt-1 font-display text-3xl uppercase tracking-wide">
+            {product.name}
+          </h1>
           <p className="mt-2 text-xl font-semibold">
             ${product.price.toFixed(2)}
           </p>
-          <p className="mt-4 text-gray-600">{product.description}</p>
+          <p className="mt-4 text-neutral-600">{product.description}</p>
 
           <ProductOptions product={product} />
 

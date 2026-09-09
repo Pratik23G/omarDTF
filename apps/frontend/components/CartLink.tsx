@@ -8,10 +8,13 @@ export default function CartLink() {
   const count = cartCount(items);
 
   return (
-    <Link href="/cart" className="relative hover:text-gray-600">
+    <Link
+      href="/cart"
+      className="flex items-center gap-1.5 rounded-full bg-black px-4 py-2 text-white normal-case tracking-normal hover:bg-neutral-800"
+    >
       Cart
       {count > 0 && (
-        <span className="absolute -right-3 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-gray-900 text-[10px] font-bold text-white">
+        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
           {count}
         </span>
       )}

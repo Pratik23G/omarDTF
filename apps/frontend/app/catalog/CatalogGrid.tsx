@@ -27,10 +27,10 @@ export default function CatalogGrid({ products }: { products: Product[] }) {
           <button
             key={c}
             onClick={() => setCategory(c)}
-            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+            className={`rounded-full border px-4 py-1.5 text-sm font-medium uppercase tracking-wide transition ${
               category === c
-                ? "border-gray-900 bg-gray-900 text-white"
-                : "border-gray-200 text-gray-600 hover:border-gray-400"
+                ? "border-black bg-black text-white"
+                : "border-neutral-300 text-neutral-600 hover:border-black"
             }`}
           >
             {c}
