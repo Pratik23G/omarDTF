@@ -18,13 +18,13 @@ export default function DesignUploader() {
     <div>
       <label
         htmlFor="design-upload"
-        className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 px-6 py-8 text-center hover:border-gray-400"
+        className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-neutral-300 px-6 py-8 text-center hover:border-black"
       >
         {preview ? (
           <img
             src={preview}
             alt="Design preview"
-            className="max-h-40 rounded-md object-contain"
+            className="max-h-40 object-contain"
           />
         ) : (
           <>
