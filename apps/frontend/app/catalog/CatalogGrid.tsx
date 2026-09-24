@@ -29,8 +29,8 @@ export default function CatalogGrid({ products }: { products: Product[] }) {
             onClick={() => setCategory(c)}
             className={`rounded-full border px-4 py-1.5 text-sm font-medium uppercase tracking-wide transition ${
               category === c
-                ? "border-black bg-black text-white"
-                : "border-neutral-300 text-neutral-600 hover:border-black"
+                ? "border-accent bg-accent text-white"
+                : "border-stone-300 text-stone-600 hover:border-black"
             }`}
           >
             {c}

@@ -15,22 +15,24 @@ export default async function ProductDetailPage({
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <div className="grid gap-10 md:grid-cols-2">
-        <img
-          src={product.images[0]}
-          alt={product.name}
-          className="aspect-square w-full border border-neutral-300 object-cover"
-        />
+        <div className="border border-stone-300 bg-stone-900 p-6">
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            className="aspect-square w-full object-cover"
+          />
+        </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.15em] text-neutral-500">
+          <p className="text-xs uppercase tracking-[0.15em] text-accent">
             {product.category}
           </p>
           <h1 className="mt-1 font-display text-3xl uppercase tracking-wide">
             {product.name}
           </h1>
-          <p className="mt-2 text-xl font-semibold">
+          <p className="mt-2 text-xl font-semibold text-accent">
             ${product.price.toFixed(2)}
           </p>
-          <p className="mt-4 text-neutral-600">{product.description}</p>
+          <p className="mt-4 text-stone-600">{product.description}</p>
 
           <ProductOptions product={product} />
 

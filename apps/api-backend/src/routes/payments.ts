@@ -33,11 +33,15 @@ payments.post("/create-intent", async (c) => {
     return c.json({ error: "Stripe is not configured on the server" }, 500);
   }
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: Math.round(amount * 100),
-    currency,
-    automatic_payment_methods: { enabled: true },
-  });
-
-  return c.json({ clientSecret: paymentIntent.client_secret });
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100),
+      currency,
+      automatic_payment_methods: { enabled: true },
+    });
+    return c.json({ clientSecret: paymentIntent.client_secret });
+  } catch (err) {
+    const message = err instanceof Stripe.errors.StripeError ? err.message : "Payment intent creation failed";
+    return c.json({ error: message }, 502);
+  }
 });

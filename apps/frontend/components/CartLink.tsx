@@ -2,19 +2,18 @@
 
 import Link from "next/link";
 import { useCartStore, cartCount } from "@/lib/cart-store";
+import { CartIcon } from "./icons";
 
 export default function CartLink() {
   const items = useCartStore((state) => state.items);
   const count = cartCount(items);
 
   return (
-    <Link
-      href="/cart"
-      className="flex items-center gap-1.5 rounded-full bg-black px-4 py-2 text-white normal-case tracking-normal hover:bg-neutral-800"
-    >
-      Cart
+    <Link href="/cart" aria-label="Cart" className="nav-link relative flex items-center gap-2">
+      <CartIcon className="h-5 w-5" />
+      <span className="hidden sm:inline">Cart</span>
       {count > 0 && (
-        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
+        <span className="cart-badge flex h-4 min-w-4 items-center justify-center rounded-full border border-current px-1 text-[10px] font-semibold tracking-normal">
           {count}
         </span>
       )}

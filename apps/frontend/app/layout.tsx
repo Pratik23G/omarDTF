@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Inter, Jost } from "next/font/google";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "./globals.css";
+import "./premium.css";
+import "./garment.css";
+import "./header.css";
+import "./motion.css";
+import "./slider.css";
 
-const anton = Anton({
+// Futura-style geometric sans (Nike/Supreme lineage) for headings, nav and buttons.
+const jost = Jost({
   subsets: ["latin"],
-  weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-display",
+  display: "swap",
 });
 
+// Helvetica-style neutral grotesk for body copy.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,10 +37,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable}`}>
-      <body className="bg-neutral-50 font-sans text-black antialiased">
+    <html lang="en" className={`${jost.variable} ${inter.variable}`}>
+      <body className="bg-stone-100 font-sans text-stone-900 antialiased">
+        <AnnouncementBar />
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

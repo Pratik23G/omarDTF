@@ -3,9 +3,7 @@
     "deny": [
       "Read(.agent/history/**)"
     ],
-    "allow": [
-      "**"
-    ]
+    "allow": []
   },
   "defaultMode": "acceptEdits",
   "enableAllProjectMcpServers": true,

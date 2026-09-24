@@ -1,6 +1,6 @@
-import type { Product } from "@omardtf/shared-types";
+import type { FitCheckRequest, FitCheckResult, Product } from "@omardtf/shared-types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 export async function getProducts(category?: string): Promise<Product[]> {
   const url = category
@@ -16,4 +16,15 @@ export async function getProduct(id: string): Promise<Product | null> {
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to fetch product ${id}: ${res.status}`);
   return res.json();
+}
+
+export async function requestFitCheck(body: FitCheckRequest): Promise<FitCheckResult> {
+  const res = await fetch(`${API_URL}/fit-check`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.error ?? "Fit check failed. Please try again.");
+  return data as FitCheckResult;
 }

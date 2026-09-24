@@ -57,3 +57,25 @@ export interface Quote {
   status: QuoteStatus;
   createdAt: string;
 }
+
+export type FitCheckMediaType = "image/jpeg" | "image/png" | "image/webp";
+
+export interface FitCheckRequest {
+  productId: string;
+  image: { data: string };
+  heightCm?: number;
+  weightKg?: number;
+  usualSize?: string;
+  fitPreference?: "fitted" | "regular" | "relaxed";
+}
+
+export interface FitCheckResult {
+  usable: boolean;
+  unusableReason: string | null;
+  recommendedSize: string | null;
+  alternateSize: string | null;
+  fitSummary: string;
+  buildNote: string;
+  stylingTips: string[];
+  confidence: "low" | "medium" | "high";
+}
