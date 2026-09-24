@@ -1,0 +1,150 @@
+/* Premium dark theme: textures, metallic type, gold accents, buttons. */
+
+.bg-carbon {
+  background-color: #0a0b0d;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.028) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 6px),
+    radial-gradient(120% 80% at 70% 0%, rgba(120, 130, 145, 0.1), transparent 60%);
+}
+
+.etched-title {
+  background: linear-gradient(180deg, #ffffff 0%, #d5dae1 45%, #8f99a5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.55));
+}
+
+.gold-text {
+  background: linear-gradient(180deg, #fff1bf 0%, #e6c463 50%, #b8902a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.75), transparent);
+}
+
+.nav-link {
+  position: relative;
+  transition: color 0.25s;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: #d4af37;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.nav-link:is(:hover, :focus-visible) {
+  color: #f1d98a;
+}
+
+.nav-link:is(:hover, :focus-visible)::after {
+  transform: scaleX(1);
+}
+
+.footer-gold {
+  background-color: #0a0b0d;
+  background-image:
+    radial-gradient(60% 90% at 50% 0%, rgba(212, 175, 55, 0.14), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 6px);
+}
+
+/* Neon gold CTA: only opacity animates, so the pulse stays compositor-friendly. */
+.neon-btn {
+  position: relative;
+  border: 1px solid #d4af37;
+  color: #f1d98a;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.neon-btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.35;
+  box-shadow: 0 0 16px 1px rgba(212, 175, 55, 0.6), inset 0 0 10px rgba(212, 175, 55, 0.25);
+  transition: opacity 0.3s;
+}
+
+.neon-btn:is(:hover, :focus-visible) {
+  background-color: rgba(212, 175, 55, 0.08);
+  color: #fff;
+}
+
+.neon-btn:is(:hover, :focus-visible)::after {
+  opacity: 1;
+}
+
+.ghost-btn {
+  position: relative;
+  color: #e6e9ee;
+  transition: color 0.3s;
+}
+
+.ghost-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.4s, opacity 0.4s;
+}
+
+.ghost-btn:is(:hover, :focus-visible) {
+  color: #f1d98a;
+}
+
+.ghost-btn:is(:hover, :focus-visible)::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Scroll depth: CSS scroll-driven, runs off the main thread, skipped where unsupported. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax-glow {
+      animation: glow-drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .neon-btn::after {
+    animation: neon-pulse 3.2s ease-in-out infinite;
+  }
+
+  .neon-btn:is(:hover, :focus-visible)::after {
+    animation: none;
+  }
+}
+
+@keyframes glow-drift {
+  to { transform: translate3d(0, var(--drift, 80px), 0); }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.85; }
+}

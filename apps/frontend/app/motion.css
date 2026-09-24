@@ -1,0 +1,62 @@
+/* Load and scroll-reveal motion. All transform/opacity only. */
+
+.announce {
+  background: #000;
+  color: #f1d98a;
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding: 0 0.14em 0.1em 0;
+}
+
+.line-mask > span {
+  display: block;
+  transform: translateY(108%);
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.is-shown {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .line-mask > span {
+    animation: line-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+
+  .fade-up {
+    animation: fade-up 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-mask > span,
+  .fade-up,
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes line-up {
+  to { transform: translateY(0); }
+}
+
+@keyframes fade-up {
+  to { opacity: 1; transform: none; }
+}

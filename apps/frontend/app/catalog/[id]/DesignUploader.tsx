@@ -18,7 +18,7 @@ export default function DesignUploader() {
     <div>
       <label
         htmlFor="design-upload"
-        className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-neutral-300 px-6 py-8 text-center hover:border-black"
+        className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-stone-300 px-6 py-8 text-center hover:border-black"
       >
         {preview ? (
           <img
@@ -29,7 +29,7 @@ export default function DesignUploader() {
         ) : (
           <>
             <span className="font-medium">Upload your design</span>
-            <span className="mt-1 text-sm text-gray-500">
+            <span className="mt-1 text-sm text-stone-500">
               PNG, JPG, or SVG
             </span>
           </>
@@ -43,9 +43,9 @@ export default function DesignUploader() {
         />
       </label>
       {fileName && (
-        <p className="mt-2 text-sm text-gray-500">Selected: {fileName}</p>
+        <p className="mt-2 text-sm text-stone-500">Selected: {fileName}</p>
       )}
-      <p className="mt-1 text-xs text-gray-400">
+      <p className="mt-1 text-xs text-stone-400">
         Design upload is local preview only for now — saving to your order
         comes in a later step.
       </p>

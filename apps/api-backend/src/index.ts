@@ -5,6 +5,8 @@ import { products } from "./routes/products.js";
 import { orders } from "./routes/orders.js";
 import { quotes } from "./routes/quotes.js";
 import { payments } from "./routes/payments.js";
+import { webhooks } from "./routes/webhooks.js";
+import { fitCheck } from "./routes/fit-check.js";
 
 try {
   process.loadEnvFile();
@@ -22,6 +24,12 @@ app.route("/products", products);
 app.route("/orders", orders);
 app.route("/quotes", quotes);
 app.route("/payments", payments);
+app.route("/webhooks", webhooks);
+app.route("/fit-check", fitCheck);
+
+console.log(
+  `fit-check uses Ollama at ${process.env.OLLAMA_HOST ?? "http://localhost:11434"} (model ${process.env.OLLAMA_MODEL ?? "gemma3:4b"})`,
+);
 
 const port = Number(process.env.PORT ?? 3001);
 

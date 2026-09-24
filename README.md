@@ -120,8 +120,8 @@ omardtf/
 ### Phase 2 — Payments (Prompts 7–9)
 
 - [x] Prompt 7: Stripe setup (API keys, payment intent)
-- [ ] Prompt 8: Checkout page with Stripe Elements (card + Apple Pay)
-- [ ] Prompt 9: Klarna + Stripe webhook for order confirmation
+- [x] Prompt 8: Checkout page with Stripe Elements (card + Apple Pay)
+- [x] Prompt 9: Klarna + Stripe webhook for order confirmation
 
 ### Phase 3 — Admin Dashboard (Prompts 10–13)
 

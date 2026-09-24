@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import type { Product } from "@omardtf/shared-types";
+import FitCheckModal from "@/components/fit/FitCheckModal";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { useCartStore } from "@/lib/cart-store";
 
 export default function ProductOptions({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes[0]);
   const [color, setColor] = useState(product.colors[0]);
   const [added, setAdded] = useState(false);
+  const [fitOpen, setFitOpen] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   function handleAddToCart() {
@@ -19,7 +22,15 @@ export default function ProductOptions({ product }: { product: Product }) {
   return (
     <div className="mt-6 space-y-4">
       <div>
-        <span className="text-sm font-medium">Size</span>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Size</span>
+          <button
+            onClick={() => setFitOpen(true)}
+            className="text-sm font-semibold uppercase tracking-wide text-accent underline-offset-4 hover:underline"
+          >
+            Not sure? AI fit check
+          </button>
+        </div>
         <div className="mt-2 flex flex-wrap gap-2">
           {product.sizes.map((s) => (
             <button
@@ -28,7 +39,7 @@ export default function ProductOptions({ product }: { product: Product }) {
               className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
                 size === s
                   ? "border-black bg-black text-white"
-                  : "border-neutral-300 text-neutral-600 hover:border-black"
+                  : "border-stone-300 text-stone-600 hover:border-black"
               }`}
             >
               {s}
@@ -43,10 +54,10 @@ export default function ProductOptions({ product }: { product: Product }) {
             <button
               key={c}
               onClick={() => setColor(c)}
-              className={`rounded-md border px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
                 color === c
-                  ? "border-gray-900 bg-gray-900 text-white"
-                  : "border-gray-200 text-gray-600 hover:border-gray-400"
+                  ? "border-accent bg-accent text-white"
+                  : "border-stone-300 text-stone-600 hover:border-black"
               }`}
             >
               {c}
@@ -56,10 +67,20 @@ export default function ProductOptions({ product }: { product: Product }) {
       </div>
       <button
         onClick={handleAddToCart}
-        className="mt-2 w-full rounded-full bg-black px-4 py-3 font-medium uppercase tracking-wide text-white transition hover:bg-neutral-800"
+        className="mt-2 w-full rounded-full bg-black px-4 py-3 font-medium uppercase tracking-wide text-white transition hover:bg-accent"
       >
         {added ? "Added!" : "Add to Cart"}
       </button>
+      <WhatsAppButton
+        message={`Hi! I'd like a bulk order quote for ${product.name}.`}
+        label="Bulk order? Ask on WhatsApp"
+      />
+      <FitCheckModal
+        product={product}
+        open={fitOpen}
+        onClose={() => setFitOpen(false)}
+        onUseSize={setSize}
+      />
     </div>
   );
 }
