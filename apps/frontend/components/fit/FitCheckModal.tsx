@@ -3,9 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import type { FitCheckRequest, FitCheckResult, Product } from "@omardtf/shared-types";
 import { requestFitCheck } from "@/lib/api";
+import { clearFitProfile, loadFitProfile, saveFitProfile, type FitProfile } from "@/lib/fit-profile";
 import { resizeToJpeg } from "@/lib/image-resize";
+import { estimateSize } from "@/lib/size-estimate";
 import FitResult from "./FitResult";
 import PhotoDropzone from "./PhotoDropzone";
+
+function estimateResult(profile: FitProfile, sizes: string[]): FitCheckResult {
+  const { recommendedSize, alternateSize } = estimateSize(profile, sizes);
+  return {
+    usable: true,
+    unusableReason: null,
+    recommendedSize,
+    alternateSize,
+    fitSummary: "Estimated instantly from your saved measurements — no photo needed.",
+    buildNote: "Want the precise AI-checked size instead? Run the full photo check below.",
+    stylingTips: [],
+    confidence: "low",
+  };
+}
 
 type FitPreference = NonNullable<FitCheckRequest["fitPreference"]>;
 
@@ -25,12 +41,13 @@ export default function FitCheckModal({
   onUseSize: (size: string) => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [profile, setProfile] = useState<FitProfile | null>(() => loadFitProfile());
   const [photo, setPhoto] = useState<{ dataUrl: string; base64: string } | null>(null);
-  const [feet, setFeet] = useState("");
-  const [inches, setInches] = useState("");
-  const [pounds, setPounds] = useState("");
-  const [usualSize, setUsualSize] = useState("");
-  const [preference, setPreference] = useState<FitPreference>("regular");
+  const [feet, setFeet] = useState(() => (profile ? String(Math.floor(profile.heightCm / 2.54 / 12)) : ""));
+  const [inches, setInches] = useState(() => (profile ? String(Math.round((profile.heightCm / 2.54) % 12)) : ""));
+  const [pounds, setPounds] = useState(() => (profile ? String(Math.round(profile.weightKg / 0.4536)) : ""));
+  const [usualSize, setUsualSize] = useState(profile?.usualSize ?? "");
+  const [preference, setPreference] = useState<FitPreference>(profile?.fitPreference ?? "regular");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<FitCheckResult | null>(null);
@@ -56,22 +73,38 @@ export default function FitCheckModal({
     setLoading(true);
     setError(null);
     const totalInches = Number(feet) * 12 + Number(inches || 0);
+    const heightCm = Number(feet) > 0 ? Math.round(totalInches * 2.54) : undefined;
+    const weightKg = Number(pounds) > 0 ? Math.round(Number(pounds) * 0.4536) : undefined;
     try {
-      setResult(
-        await requestFitCheck({
-          productId: product.id,
-          image: { data: photo.base64 },
-          heightCm: Number(feet) > 0 ? Math.round(totalInches * 2.54) : undefined,
-          weightKg: Number(pounds) > 0 ? Math.round(Number(pounds) * 0.4536) : undefined,
-          usualSize: usualSize || undefined,
-          fitPreference: preference,
-        }),
-      );
+      const outcome = await requestFitCheck({
+        productId: product.id,
+        image: { data: photo.base64 },
+        heightCm,
+        weightKg,
+        usualSize: usualSize || undefined,
+        fitPreference: preference,
+      });
+      setResult(outcome);
+      if (outcome.usable && heightCm && weightKg) {
+        const next: FitProfile = { heightCm, weightKg, usualSize, fitPreference: preference };
+        saveFitProfile(next);
+        setProfile(next);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Fit check failed. Please try again.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function useSavedProfile() {
+    if (!profile) return;
+    setResult(estimateResult(profile, product.sizes));
+  }
+
+  function forgetProfile() {
+    clearFitProfile();
+    setProfile(null);
   }
 
   function reset() {
@@ -108,6 +141,27 @@ export default function FitCheckModal({
             <FitResult result={result} onUseSize={(size) => { onUseSize(size); onClose(); }} onRetry={reset} />
           ) : (
             <div className="space-y-4">
+              {profile && (
+                <div className="flex items-center justify-between gap-3 border border-accent/30 bg-accent/5 px-3 py-2.5">
+                  <p className="text-sm text-stone-700">
+                    We remember your measurements from last time.
+                  </p>
+                  <div className="flex shrink-0 gap-2">
+                    <button
+                      onClick={useSavedProfile}
+                      className="rounded-full bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-accent"
+                    >
+                      Instant size
+                    </button>
+                    <button
+                      onClick={forgetProfile}
+                      className="text-xs font-semibold uppercase tracking-wide text-stone-400 hover:text-stone-700"
+                    >
+                      Forget
+                    </button>
+                  </div>
+                </div>
+              )}
               <p className="text-sm text-stone-600">
                 Use a full-length photo facing the camera in good light, with just you in frame.
                 Add measurements for a sharper recommendation.

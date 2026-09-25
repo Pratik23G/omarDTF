@@ -3,17 +3,6 @@ import type { Product } from "@omardtf/shared-types";
 export const mockProducts: Product[] = [
   // T-Shirts
   {
-    id: "1",
-    name: "Kyivskiy Rezhym Graphic Tee",
-    description: "Soft cotton tee with a full-color DTF transfer of your design.",
-    price: 24.99,
-    images: ["/products/kyivskiy-rezhym-tee.png"],
-    category: "T-Shirts",
-    inStock: true,
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black"],
-  },
-  {
     id: "2",
     name: "Stargazing Truck Bed Tee",
     description: "Novelty graphic tee, full-color DTF print, available in three colorways.",
@@ -83,18 +72,6 @@ export const mockProducts: Product[] = [
     sizes: ["S", "M", "L", "XL"],
     colors: ["Black"],
   },
-  {
-    id: "8",
-    name: "Chiro League Tee",
-    description: "Team/league graphic tee, full-color DTF back print.",
-    price: 22.99,
-    images: ["/products/chiro-league-tee.png"],
-    category: "T-Shirts",
-    inStock: true,
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black"],
-  },
-
   // Hoodies
   {
     id: "9",
@@ -109,17 +86,6 @@ export const mockProducts: Product[] = [
   },
 
   // Business
-  {
-    id: "10",
-    name: "ESME Clean Company Tee",
-    description: "Branded team tee with company logo, full-color DTF transfer — popular for staff uniforms and local business promo.",
-    price: 21.99,
-    images: ["/products/esme-clean-business-tee.jpg"],
-    category: "Business",
-    inStock: true,
-    sizes: ["S", "M", "L", "XL", "2XL"],
-    colors: ["Light Blue", "White", "Navy"],
-  },
   {
     id: "11",
     name: "Master Sound DJ Business Tee",

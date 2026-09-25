@@ -4,8 +4,8 @@ import ArtisanStrip from "./hero/ArtisanStrip";
 import HeroCarousel from "./hero/HeroCarousel";
 import HeroBackdrop from "./hero/HeroBackdrop";
 
-// Kyivskiy, Stargazing, Monster Mama, Viking Voyage
-const SHOWCASE_IDS = ["1", "2", "12", "5"];
+// Army Crest, Stargazing, Monster Mama, Viking Voyage
+const SHOWCASE_IDS = ["3", "2", "12", "5"];
 
 export default async function Hero() {
   const products = await getProducts().catch(() => []);

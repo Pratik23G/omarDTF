@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3">
               <SpoolIcon className="h-6 w-6 text-gold" />
-              <Wordmark className="text-3xl text-white" />
+              <Wordmark className="h-14" />
             </div>
             <p className="mt-4 max-w-sm leading-relaxed text-gunmetal-100/90">
               Custom DTF transfers and personalized apparel, pressed to order in

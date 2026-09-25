@@ -2,7 +2,7 @@
 
 .site-header {
   --fg: #f5f5f4;
-  --accent: #f1d98a;
+  --accent: #5b9bff;
   --bg: #0a0b0d;
   --line: rgba(255, 255, 255, 0.1);
   position: sticky;
@@ -16,7 +16,7 @@
 
 .site-header[data-theme="light"] {
   --fg: #0c0a09;
-  --accent: #8a6a12;
+  --accent: #1d4ed8;
   --bg: #f5f5f4;
   --line: rgba(12, 10, 9, 0.09);
 }
