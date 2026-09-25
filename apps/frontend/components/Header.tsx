@@ -60,8 +60,8 @@ export default function Header() {
             Catalog
           </Link>
         </nav>
-        <Link href="/" aria-label="OMARDTF home" className="text-2xl">
-          <Wordmark />
+        <Link href="/" aria-label="OMARDTF home">
+          <Wordmark className="h-11" />
         </Link>
         <div className="flex justify-end font-display text-[13px] font-semibold uppercase tracking-[0.16em]">
           <CartLink />

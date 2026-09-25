@@ -13,7 +13,7 @@ export const mockOrders: Order[] = [
     items: [
       {
         id: "item_1",
-        productId: "1",
+        productId: "2",
         quantity: 2,
         size: "M",
         color: "Black",

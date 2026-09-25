@@ -5,6 +5,7 @@ import type { Product } from "@omardtf/shared-types";
 import FitCheckModal from "@/components/fit/FitCheckModal";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { useCartStore } from "@/lib/cart-store";
+import RecolorPanel from "./RecolorPanel";
 
 export default function ProductOptions({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes[0]);
@@ -65,6 +66,7 @@ export default function ProductOptions({ product }: { product: Product }) {
           ))}
         </div>
       </div>
+      <RecolorPanel product={product} />
       <button
         onClick={handleAddToCart}
         className="mt-2 w-full rounded-full bg-black px-4 py-3 font-medium uppercase tracking-wide text-white transition hover:bg-accent"

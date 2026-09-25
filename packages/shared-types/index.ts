@@ -79,3 +79,12 @@ export interface FitCheckResult {
   stylingTips: string[];
   confidence: "low" | "medium" | "high";
 }
+
+export interface RecolorRequest {
+  productId: string;
+  targetColor: string;
+}
+
+export interface RecolorResult {
+  image: string;
+}
