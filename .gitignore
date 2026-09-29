@@ -15,5 +15,11 @@ out
 # logs
 *.log
 
+# local SQLite database (dev data, not source)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
 # OS junk
 .DS_Store

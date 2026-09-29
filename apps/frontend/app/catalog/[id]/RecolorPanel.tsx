@@ -37,7 +37,7 @@ export default function RecolorPanel({ product }: { product: Product }) {
         />
       </div>
       <p className="mt-1 text-xs text-stone-500">
-        Preview this garment in any color. Keeps the printed design as-is.
+        Want a color we don&apos;t stock above? Preview it here with AI — keeps the printed design as-is.
       </p>
       <button
         onClick={handleRecolor}

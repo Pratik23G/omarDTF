@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { getProduct } from "@/lib/api";
-import DesignUploader from "./DesignUploader";
-import ProductOptions from "./ProductOptions";
+import ProductReviews from "@/components/reviews/ProductReviews";
+import { getProduct, getReviews } from "@/lib/api";
+import ProductDetail from "./ProductDetail";
 
 export default async function ProductDetailPage({
   params,
@@ -12,38 +12,12 @@ export default async function ProductDetailPage({
   const product = await getProduct(id);
   if (!product) notFound();
 
+  const reviews = await getReviews(id).catch(() => []);
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
-      <div className="grid gap-10 md:grid-cols-2">
-        <div className="border border-stone-300 bg-stone-900 p-6">
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            className="aspect-square w-full object-cover"
-          />
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-[0.15em] text-accent">
-            {product.category}
-          </p>
-          <h1 className="mt-1 font-display text-3xl uppercase tracking-wide">
-            {product.name}
-          </h1>
-          <p className="mt-2 text-xl font-semibold text-accent">
-            ${product.price.toFixed(2)}
-          </p>
-          <p className="mt-4 text-stone-600">{product.description}</p>
-
-          <ProductOptions product={product} />
-
-          <div className="mt-8">
-            <h2 className="font-medium">Your design</h2>
-            <div className="mt-3">
-              <DesignUploader />
-            </div>
-          </div>
-        </div>
-      </div>
+      <ProductDetail product={product} />
+      <ProductReviews productId={product.id} initialReviews={reviews} />
     </main>
   );
 }

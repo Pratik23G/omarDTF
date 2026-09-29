@@ -42,6 +42,17 @@ export function CartIcon({ className }: { className?: string }) {
   );
 }
 
+/** Instagram camera glyph: rounded square, lens ring, flash dot. */
+export function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg {...base} className={className}>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 /** Official WhatsApp glyph: green rounded-square badge with the phone mark. */
 export function WhatsAppIcon({ className }: { className?: string }) {
   return (

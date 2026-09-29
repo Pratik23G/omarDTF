@@ -20,7 +20,7 @@ function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-md border border-stone-200 bg-white p-1.5 ${className ?? ""}`}
+      className={`inline-flex items-center justify-center border border-stone-200 bg-white p-1.5 ${className ?? ""}`}
       title={title}
     >
       <svg viewBox="0 0 24 24" className="h-4 w-auto" role="img" aria-label={title}>
