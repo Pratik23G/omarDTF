@@ -1,4 +1,12 @@
-import type { FitCheckRequest, FitCheckResult, Product, RecolorRequest, RecolorResult } from "@omardtf/shared-types";
+import type {
+  CreateReviewInput,
+  FitCheckRequest,
+  FitCheckResult,
+  Product,
+  RecolorRequest,
+  RecolorResult,
+  Review,
+} from "@omardtf/shared-types";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -38,4 +46,21 @@ export async function requestRecolor(body: RecolorRequest): Promise<RecolorResul
   const data = await res.json().catch(() => null);
   if (!res.ok) throw new Error(data?.error ?? "Recolor failed. Please try again.");
   return data as RecolorResult;
+}
+
+export async function getReviews(productId: string): Promise<Review[]> {
+  const res = await fetch(`${API_URL}/reviews?productId=${encodeURIComponent(productId)}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch reviews: ${res.status}`);
+  return res.json();
+}
+
+export async function submitReview(body: CreateReviewInput): Promise<Review> {
+  const res = await fetch(`${API_URL}/reviews`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.error ?? "Couldn't submit your review. Please try again.");
+  return data as Review;
 }

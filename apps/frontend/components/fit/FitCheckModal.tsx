@@ -155,7 +155,7 @@ export default function FitCheckModal({
                     </button>
                     <button
                       onClick={forgetProfile}
-                      className="text-xs font-semibold uppercase tracking-wide text-stone-400 hover:text-stone-700"
+                      className="text-xs font-semibold uppercase tracking-wide text-stone-400 hover:text-black"
                     >
                       Forget
                     </button>

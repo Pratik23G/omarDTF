@@ -1,26 +1,17 @@
-import type { CSSProperties } from "react";
-
-const SOURCE = { w: 1248, h: 832 };
-// Crop window onto just the "OMAR DTF / CUSTOM TRANSFERS & APPAREL" text,
-// cutting the shirt-stack and paint-splatter art on either side.
-const CROP = { x: 370, y: 335, w: 560, h: 155 };
-
-const style: CSSProperties = {
-  aspectRatio: `${CROP.w} / ${CROP.h}`,
-  backgroundImage: "url(/brand/omardtf-logo.png)",
-  backgroundRepeat: "no-repeat",
-  backgroundSize: `${(SOURCE.w / CROP.w) * 100}% auto`,
-  backgroundPosition: `${(CROP.x / (SOURCE.w - CROP.w)) * 100}% ${(CROP.y / (SOURCE.h - CROP.h)) * 100}%`,
-};
-
-/** OMARDTF brand logo, cropped to just the wordmark. `className` sets height (e.g. "h-10"); width follows the crop's aspect ratio. */
+/**
+ * OMARDTF brand logo, shown in full — no cropping. The source art already sits on a
+ * near-black backdrop that matches the site's dark header/footer/hero sections, so it
+ * blends in there; over the light header state it reads as a small rounded badge.
+ * `className` sets height (e.g. "h-10"); width follows the image's own aspect ratio.
+ */
 export default function Wordmark({ className = "h-9" }: { className?: string }) {
   return (
-    <span
-      role="img"
-      aria-label="OMARDTF — Custom Transfers & Apparel"
-      className={`inline-block w-auto ${className}`}
-      style={style}
+    <img
+      src="/brand/omardtf-logo.png"
+      alt="OMARDTF — Custom Transfers & Apparel"
+      width={1248}
+      height={832}
+      className={`w-auto rounded-md object-contain ${className}`}
     />
   );
 }

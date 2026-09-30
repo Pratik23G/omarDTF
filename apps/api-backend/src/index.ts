@@ -8,6 +8,7 @@ import { payments } from "./routes/payments.js";
 import { webhooks } from "./routes/webhooks.js";
 import { fitCheck } from "./routes/fit-check.js";
 import { recolor } from "./routes/recolor.js";
+import { reviews } from "./routes/reviews.js";
 
 try {
   process.loadEnvFile();
@@ -17,7 +18,24 @@ try {
 
 const app = new Hono();
 
-app.use("*", cors({ origin: process.env.FRONTEND_URL ?? "http://localhost:3000" }));
+const isProd = process.env.NODE_ENV === "production";
+const configuredOrigin = process.env.FRONTEND_URL ?? "http://localhost:3000";
+const localOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/;
+
+// Next dev falls back to a different port whenever 3000 is taken (e.g. by a leftover
+// dev server), which used to silently break every POST here with a CORS-driven
+// "Failed to fetch" — the fixed origin below never matched. Any localhost port is
+// fine in dev; only production is locked to the one configured origin.
+app.use(
+  "*",
+  cors({
+    origin: (origin) => {
+      if (origin === configuredOrigin) return origin;
+      if (!isProd && localOriginPattern.test(origin)) return origin;
+      return null;
+    },
+  }),
+);
 
 app.get("/", (c) => c.json({ status: "ok", service: "omardtf-api" }));
 
@@ -28,6 +46,7 @@ app.route("/payments", payments);
 app.route("/webhooks", webhooks);
 app.route("/fit-check", fitCheck);
 app.route("/recolor", recolor);
+app.route("/reviews", reviews);
 
 console.log(
   `fit-check uses Ollama at ${process.env.OLLAMA_HOST ?? "http://localhost:11434"} (model ${process.env.OLLAMA_MODEL ?? "gemma3:4b"})`,

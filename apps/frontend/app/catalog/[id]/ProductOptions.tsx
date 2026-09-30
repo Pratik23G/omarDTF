@@ -7,9 +7,16 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { useCartStore } from "@/lib/cart-store";
 import RecolorPanel from "./RecolorPanel";
 
-export default function ProductOptions({ product }: { product: Product }) {
+export default function ProductOptions({
+  product,
+  color,
+  onColorChange,
+}: {
+  product: Product;
+  color: string;
+  onColorChange: (color: string) => void;
+}) {
   const [size, setSize] = useState(product.sizes[0]);
-  const [color, setColor] = useState(product.colors[0]);
   const [added, setAdded] = useState(false);
   const [fitOpen, setFitOpen] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
@@ -54,7 +61,7 @@ export default function ProductOptions({ product }: { product: Product }) {
           {product.colors.map((c) => (
             <button
               key={c}
-              onClick={() => setColor(c)}
+              onClick={() => onColorChange(c)}
               className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
                 color === c
                   ? "border-accent bg-accent text-white"
