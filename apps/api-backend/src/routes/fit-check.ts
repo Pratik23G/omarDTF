@@ -1,10 +1,9 @@
-import { getConnInfo } from "@hono/node-server/conninfo";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { z } from "zod";
 import { mockProducts } from "../data/mock-products.js";
 import { sniffImageType } from "../lib/image-type.js";
-import { createRateLimiter } from "../lib/rate-limit.js";
+import { clientKey, createRateLimiter } from "../lib/rate-limit.js";
 import {
   FitCheckBusyError,
   FitCheckUnavailableError,
@@ -53,7 +52,7 @@ fitCheck.post(
     const mediaType = sniffImageType(image.data);
     if (!mediaType) return c.json({ error: "Use a JPEG, PNG or WebP photo." }, 400);
 
-    const client = getConnInfo(c).remote.address ?? "unknown";
+    const client = clientKey(c);
     if (!perClient(client) || !perDay("all")) {
       return c.json({ error: "Too many fit checks right now. Please try again later." }, 429);
     }

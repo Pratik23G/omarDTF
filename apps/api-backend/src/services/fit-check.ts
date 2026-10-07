@@ -1,9 +1,9 @@
 import { z } from "zod";
 import type { FitCheckMediaType, FitCheckResult, Product } from "@omardtf/shared-types";
 
-const OLLAMA_HOST = (process.env.OLLAMA_HOST ?? "http://localhost:11434").replace(/\/$/, "");
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "gemma3:4b";
-const REQUEST_TIMEOUT_MS = 180_000;
+const GEMINI_HOST = "https://generativelanguage.googleapis.com";
+const GEMINI_MODEL = process.env.GEMINI_FIT_MODEL ?? "gemini-flash-latest";
+const REQUEST_TIMEOUT_MS = 60_000;
 const MAX_CONCURRENT = 2;
 
 const SYSTEM_PROMPT = `You are the size assistant for OMARDTF, a custom apparel print shop.
@@ -39,7 +39,7 @@ export class FitCheckBusyError extends Error {}
 let inFlight = 0;
 
 function buildJsonSchema(sizes: string[]) {
-  const sizeOrEmpty = { type: "string", enum: [...sizes, ""] };
+  const sizeOrEmpty = { type: "string", description: `One of: ${sizes.join(", ")}, or empty` };
   return {
     type: "object",
     properties: {
@@ -84,47 +84,50 @@ function describeCustomer(input: {
   return lines.length > 0 ? lines.join("\n") : "No extra measurements provided.";
 }
 
-async function callOllama(body: unknown): Promise<string> {
-  const headers: Record<string, string> = { "content-type": "application/json" };
-  if (process.env.OLLAMA_API_KEY) headers.authorization = `Bearer ${process.env.OLLAMA_API_KEY}`;
+/** Calls Gemini's generateContent with the photo and a JSON response schema; returns the raw JSON text. */
+async function callGemini(body: unknown, retriesLeft = 2): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new FitCheckUnavailableError("Fit checker isn't configured. Set GEMINI_API_KEY.");
+  }
 
   let res: Response;
   try {
-    res = await fetch(`${OLLAMA_HOST}/api/chat`, {
+    res = await fetch(`${GEMINI_HOST}/v1beta/models/${GEMINI_MODEL}:generateContent`, {
       method: "POST",
-      headers,
+      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
     if (error instanceof DOMException && error.name === "TimeoutError") {
-      throw new Error("Ollama took too long to answer");
+      throw new Error("Fit checker took too long to answer");
     }
-    throw new FitCheckUnavailableError(
-      `Can't reach Ollama at ${OLLAMA_HOST}. Start it with "ollama serve" or set OLLAMA_HOST.`,
-    );
+    throw new FitCheckUnavailableError("Can't reach the fit checker right now.");
   }
 
   if (!res.ok) {
     const detail = (await res.text().catch(() => "")).slice(0, 300);
-    if (res.status === 404) {
-      throw new FitCheckUnavailableError(
-        `Model "${OLLAMA_MODEL}" isn't available. Run: ollama pull ${OLLAMA_MODEL}`,
-      );
-    }
     if (res.status === 401 || res.status === 403) {
-      throw new FitCheckUnavailableError("Ollama rejected the API key. Check OLLAMA_API_KEY.");
+      throw new FitCheckUnavailableError("Fit checker rejected the API key. Check GEMINI_API_KEY.");
     }
-    throw new Error(`Ollama error ${res.status}: ${detail}`);
+    if (res.status === 503 && retriesLeft > 0) {
+      await new Promise((r) => setTimeout(r, 1500));
+      return callGemini(body, retriesLeft - 1);
+    }
+    if (res.status === 429 || res.status === 503) throw new FitCheckBusyError("Fit checker is busy");
+    throw new Error(`Gemini error ${res.status}: ${detail}`);
   }
 
-  const data = (await res.json()) as { message?: { content?: string } };
-  const content = data.message?.content;
-  if (!content) throw new Error("Ollama returned an empty answer");
+  const data = (await res.json()) as {
+    candidates?: { content?: { parts?: { text?: string }[] } }[];
+  };
+  const content = data.candidates?.[0]?.content?.parts?.find((p) => p.text)?.text;
+  if (!content) throw new Error("Fit checker returned an empty answer");
   return content;
 }
 
-/** Sends the customer photo and product details to an Ollama vision model and returns a validated size recommendation. */
+/** Sends the customer photo and product details to a Gemini vision model and returns a validated size recommendation. */
 export async function runFitCheck(input: {
   product: Product;
   image: { mediaType: FitCheckMediaType; data: string };
@@ -138,24 +141,29 @@ export async function runFitCheck(input: {
   if (inFlight >= MAX_CONCURRENT) throw new FitCheckBusyError("Fit checker is busy");
   inFlight += 1;
   try {
-    const content = await callOllama({
-      model: OLLAMA_MODEL,
-      stream: false,
-      format: buildJsonSchema(product.sizes),
-      options: { temperature: 0.2, num_ctx: 4096 },
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+    const content = await callGemini({
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [
         {
           role: "user",
-          content: `Garment: ${product.name} (${product.category}). ${product.description}
+          parts: [
+            {
+              text: `Garment: ${product.name} (${product.category}). ${product.description}
 Sizes offered: ${product.sizes.join(", ")}
 Colors: ${product.colors.join(", ")}
 
 Customer details:
 ${describeCustomer(input)}`,
-          images: [image.data],
+            },
+            { inlineData: { mimeType: image.mediaType, data: image.data } },
+          ],
         },
       ],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: "application/json",
+        responseSchema: buildJsonSchema(product.sizes),
+      },
     });
 
     const parsed = resultSchema.parse(JSON.parse(content));
