@@ -1,20 +1,22 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import Stripe from "stripe";
+import { priceCart } from "../lib/pricing.js";
+import { getStripeClient } from "../lib/stripe.js";
 
 export const payments = new Hono();
 
-function getStripeClient() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
-    throw new Error("STRIPE_SECRET_KEY is not set");
-  }
-  return new Stripe(key);
-}
-
 const createIntentSchema = z.object({
-  amount: z.number().positive(),
-  currency: z.string().default("usd"),
+  items: z
+    .array(
+      z.object({
+        productId: z.string(),
+        quantity: z.number().int().positive().max(100),
+        size: z.string(),
+        color: z.string(),
+      }),
+    )
+    .min(1),
 });
 
 payments.post("/create-intent", async (c) => {
@@ -24,7 +26,8 @@ payments.post("/create-intent", async (c) => {
     return c.json({ error: "Invalid payment payload", issues: parsed.error.issues }, 400);
   }
 
-  const { amount, currency } = parsed.data;
+  const priced = priceCart(parsed.data.items);
+  if ("error" in priced) return c.json({ error: priced.error }, 400);
 
   let stripe: Stripe;
   try {
@@ -35,8 +38,8 @@ payments.post("/create-intent", async (c) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
-      currency,
+      amount: priced.totalCents,
+      currency: "usd",
       automatic_payment_methods: { enabled: true },
     });
     return c.json({ clientSecret: paymentIntent.client_secret });

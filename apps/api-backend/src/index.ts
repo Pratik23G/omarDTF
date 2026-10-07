@@ -9,6 +9,7 @@ import { webhooks } from "./routes/webhooks.js";
 import { fitCheck } from "./routes/fit-check.js";
 import { recolor } from "./routes/recolor.js";
 import { reviews } from "./routes/reviews.js";
+import { admin } from "./routes/admin.js";
 
 try {
   process.loadEnvFile();
@@ -47,6 +48,7 @@ app.route("/webhooks", webhooks);
 app.route("/fit-check", fitCheck);
 app.route("/recolor", recolor);
 app.route("/reviews", reviews);
+app.route("/admin", admin);
 
 const port = Number(process.env.PORT ?? 3001);
 

@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PENDING
+  IN_PROGRESS
+  READY
+  DELIVERED
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  paymentIntentId String      @unique
+  customerEmail   String
+  customerName    String
+  customerPhone   String
+  status          OrderStatus @default(PENDING)
+  paymentMethod   String
+  /// Amount charged in cents, taken from the Stripe PaymentIntent (never from the browser).
+  totalAmountCents Int
+  designUploadUrl String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+
+  @@index([status, createdAt])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String @id @default(cuid())
+  orderId    String
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  quantity   Int
+  size       String
+  color      String
+  /// Unit price in cents at time of purchase.
+  priceCents Int
+
+  @@index([orderId])
+}

@@ -48,15 +48,12 @@ export default function PaymentForm() {
           customerEmail: email,
           customerName: name,
           customerPhone: phone,
-          paymentMethod: "card",
-          totalAmount: cartTotal(items),
+          paymentIntentId: paymentIntent.id,
           items: items.map((item) => ({
-            id: crypto.randomUUID(),
             productId: item.productId,
             quantity: item.quantity,
             size: item.size,
             color: item.color,
-            price: item.price,
           })),
         }),
       }).catch(() => {
