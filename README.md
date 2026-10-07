@@ -125,10 +125,10 @@ omardtf/
 
 ### Phase 3 — Admin Dashboard (Prompts 10–13)
 
-- [ ] Prompt 10: Supabase + Prisma database setup
-- [ ] Prompt 11: Admin app with Clerk auth (Omar-only login)
-- [ ] Prompt 12: Orders queue + status management
-- [ ] Prompt 13: Sales dashboard (revenue chart, cash tracker)
+- [x] Prompt 10: Supabase + Prisma database setup
+- [x] Prompt 11: Admin app with Clerk auth (Omar-only login)
+- [x] Prompt 12: Orders queue + status management
+- [x] Prompt 13: Sales dashboard (revenue chart, cash tracker)
 
 ### Phase 4 — AI Agents (Prompts 14–17)
 
