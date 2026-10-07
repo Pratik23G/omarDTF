@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { QuoteStatus, type Quote } from "@omardtf/shared-types";
+import { requireAdmin } from "../lib/admin-auth.js";
 import { mockQuotes } from "../data/mock-quotes.js";
 
 export const quotes = new Hono();
@@ -14,11 +15,11 @@ const createQuoteSchema = z.object({
   quantity: z.number().int().positive(),
 });
 
-quotes.get("/", (c) => {
+quotes.get("/", requireAdmin, (c) => {
   return c.json(mockQuotes);
 });
 
-quotes.get("/:id", (c) => {
+quotes.get("/:id", requireAdmin, (c) => {
   const quote = mockQuotes.find((q) => q.id === c.req.param("id"));
   if (!quote) return c.json({ error: "Quote not found" }, 404);
   return c.json(quote);

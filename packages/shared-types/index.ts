@@ -32,6 +32,7 @@ export interface Order {
   customerName: string;
   customerPhone: string;
   status: OrderStatus;
+  paymentIntentId?: string;
   paymentMethod: string;
   totalAmount: number;
   designUploadUrl?: string;
@@ -103,4 +104,18 @@ export interface CreateReviewInput {
   authorName: string;
   rating: 1 | 2 | 3 | 4 | 5;
   comment: string;
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  orderCount: number;
+  averageOrderValue: number;
+  /** Money collected for orders that are not yet delivered. */
+  inProgressValue: number;
+  /** Money collected for orders already delivered. */
+  deliveredValue: number;
+  statusCounts: Record<OrderStatus, number>;
+  revenueByMethod: { method: string; revenue: number }[];
+  /** One entry per day for the last 30 days, oldest first (date is YYYY-MM-DD, UTC). */
+  daily: { date: string; revenue: number; orders: number }[];
 }

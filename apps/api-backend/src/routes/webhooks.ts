@@ -1,15 +1,8 @@
 import { Hono } from "hono";
 import Stripe from "stripe";
+import { getStripeClient } from "../lib/stripe.js";
 
 export const webhooks = new Hono();
-
-function getStripeClient() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
-    throw new Error("STRIPE_SECRET_KEY is not set");
-  }
-  return new Stripe(key);
-}
 
 webhooks.post("/stripe", async (c) => {
   const signature = c.req.header("stripe-signature");
