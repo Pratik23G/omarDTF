@@ -1,8 +1,7 @@
-import { getConnInfo } from "@hono/node-server/conninfo";
 import { Hono } from "hono";
 import { z } from "zod";
 import { mockProducts } from "../data/mock-products.js";
-import { createRateLimiter } from "../lib/rate-limit.js";
+import { clientKey, createRateLimiter } from "../lib/rate-limit.js";
 import { RecolorBusyError, RecolorUnavailableError, runRecolor } from "../services/recolor.js";
 
 export const recolor = new Hono();
@@ -25,7 +24,7 @@ recolor.post("/", async (c) => {
   const product = mockProducts.find((p) => p.id === productId);
   if (!product) return c.json({ error: "Product not found" }, 404);
 
-  const client = getConnInfo(c).remote.address ?? "unknown";
+  const client = clientKey(c);
   if (!perClient(client)) {
     return c.json({ error: "Too many recolor requests right now. Please try again later." }, 429);
   }

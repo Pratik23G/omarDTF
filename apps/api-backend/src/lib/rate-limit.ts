@@ -1,3 +1,6 @@
+import type { Context } from "hono";
+import { getConnInfo } from "@hono/node-server/conninfo";
+
 /** Fixed-window in-memory limiter; returns true when the key is still under its budget. */
 export function createRateLimiter(windowMs: number, max: number) {
   const hits = new Map<string, { count: number; resetAt: number }>();
@@ -15,4 +18,16 @@ export function createRateLimiter(windowMs: number, max: number) {
     entry.count += 1;
     return true;
   };
+}
+
+/**
+ * Best-effort client identifier for rate limiting. Behind Railway's proxy the socket
+ * address is the proxy, so in production the first X-Forwarded-For entry is used.
+ */
+export function clientKey(c: Context): string {
+  if (process.env.NODE_ENV === "production") {
+    const forwarded = c.req.header("x-forwarded-for")?.split(",")[0]?.trim();
+    if (forwarded) return forwarded;
+  }
+  return getConnInfo(c).remote.address ?? "unknown";
 }

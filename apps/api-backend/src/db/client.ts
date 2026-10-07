@@ -1,8 +1,12 @@
 import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import path from "node:path";
 import Database from "better-sqlite3";
 
-const DB_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "data.db");
+// DATABASE_PATH points at a persistent volume in production (e.g. /data/data.db on Railway).
+const DB_PATH =
+  process.env.DATABASE_PATH ?? path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "data.db");
+fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
 export const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
