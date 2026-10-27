@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Jost } from "next/font/google";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   title: "OmarDTF — Custom DTF Transfers & Apparel",
   description:
     "Custom DTF transfers and personalized apparel, made in Redwood City, CA.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

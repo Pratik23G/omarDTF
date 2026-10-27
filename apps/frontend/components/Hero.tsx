@@ -19,15 +19,15 @@ export default async function Hero() {
       className="relative overflow-hidden bg-carbon text-white"
     >
       <HeroBackdrop />
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-2 md:items-center md:py-24">
-        <div>
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-12 md:items-center md:py-24">
+        <div className="min-w-0">
           <p
             className="fade-up gold-text font-display text-sm font-semibold uppercase tracking-[0.3em]"
             style={{ "--d": "0.1s" } as React.CSSProperties}
           >
             Redwood City, CA
           </p>
-          <h1 className="mt-5 font-display text-6xl font-extrabold italic uppercase leading-[0.92] tracking-tight sm:text-7xl">
+          <h1 className="mt-5 font-display text-[clamp(2.5rem,13vw,4.5rem)] font-extrabold italic uppercase leading-[0.92] tracking-tight sm:text-7xl">
             <span className="line-mask">
               <span
                 className="etched-title"
@@ -46,7 +46,7 @@ export default async function Hero() {
             </span>
           </h1>
           <p
-            className="fade-up mt-6 max-w-md text-lg leading-relaxed text-gunmetal-100/90"
+            className="fade-up mt-6 max-w-md text-base leading-relaxed sm:text-lg text-gunmetal-100/90"
             style={{ "--d": "0.7s" } as React.CSSProperties}
           >
             Upload your design, pick your gear, and we&apos;ll print it —
@@ -71,7 +71,7 @@ export default async function Hero() {
           </div>
         </div>
         {showcase.length > 0 && (
-          <div className="fade-up" style={{ "--d": "0.5s" } as React.CSSProperties}>
+          <div className="fade-up min-w-0" style={{ "--d": "0.5s" } as React.CSSProperties}>
             <HeroCarousel products={showcase} />
           </div>
         )}

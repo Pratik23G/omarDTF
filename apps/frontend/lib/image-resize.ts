@@ -1,8 +1,8 @@
 /** Downscales an image file to a JPEG (max side in px) so uploads stay small; returns a preview URL and raw base64. */
 export async function resizeToJpeg(
   file: File,
-  maxSide = 1024,
-  quality = 0.85,
+  maxSide = 768,
+  quality = 0.8,
 ): Promise<{ dataUrl: string; base64: string }> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
   const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));

@@ -39,7 +39,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16 text-center">
+      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16 text-center">
         <h1 className="font-display text-2xl uppercase tracking-wide">
           Your cart is empty
         </h1>
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
+    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="font-display text-2xl uppercase tracking-wide">
         Checkout
       </h1>

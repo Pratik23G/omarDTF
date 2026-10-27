@@ -51,8 +51,8 @@ export default function Header() {
 
   return (
     <header ref={ref} className="site-header" data-theme={theme}>
-      <div className="mx-auto grid h-24 max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6">
-        <nav className="flex items-center gap-7 font-display text-[13px] font-semibold uppercase tracking-[0.16em]">
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-4 sm:h-24 sm:px-6">
+        <nav className="flex items-center gap-4 font-display text-xs sm:gap-7 sm:text-[13px] font-semibold uppercase tracking-[0.16em]">
           <Link href="/" className="nav-link hidden sm:inline">
             Home
           </Link>
@@ -61,7 +61,7 @@ export default function Header() {
           </Link>
         </nav>
         <Link href="/" aria-label="OMARDTF home">
-          <Wordmark className="h-20" />
+          <Wordmark className="h-12 sm:h-20" />
         </Link>
         <div className="flex justify-end font-display text-[13px] font-semibold uppercase tracking-[0.16em]">
           <CartLink />
