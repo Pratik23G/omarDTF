@@ -26,7 +26,7 @@ function estimateResult(profile: FitProfile, sizes: string[]): FitCheckResult {
 type FitPreference = NonNullable<FitCheckRequest["fitPreference"]>;
 
 const PREFERENCES: FitPreference[] = ["fitted", "regular", "relaxed"];
-const FIELD = "w-full border border-stone-300 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none";
+const FIELD = "w-full border border-stone-300 bg-white px-3 py-2.5 text-base focus:border-black focus:outline-none";
 
 /** Dialog where a customer uploads a photo and gets an AI size recommendation for one product. */
 export default function FitCheckModal({
@@ -118,9 +118,9 @@ export default function FitCheckModal({
       ref={dialogRef}
       onClose={onClose}
       onClick={(e) => e.target === dialogRef.current && onClose()}
-      className="m-auto w-[min(56rem,calc(100%-2rem))] max-h-[92vh] overflow-y-auto bg-white p-0 text-stone-900 backdrop:bg-black/70"
+      className="m-auto w-[min(56rem,calc(100%-1rem))] max-h-[94dvh] overscroll-contain overflow-y-auto bg-white p-0 text-stone-900 backdrop:bg-black/70"
     >
-      <div className="p-6 md:p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">AI Fit Check</p>
@@ -129,12 +129,12 @@ export default function FitCheckModal({
             </h2>
             <p className="mt-1 text-sm text-stone-500">{product.name}</p>
           </div>
-          <button onClick={onClose} aria-label="Close" className="text-2xl leading-none text-stone-500 hover:text-black">
+          <button onClick={onClose} aria-label="Close" className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-2xl leading-none text-stone-500 hover:text-black">
             &times;
           </button>
         </div>
 
-        <div className="mt-6 grid gap-8 md:grid-cols-[minmax(0,18rem)_1fr]">
+        <div className="mt-4 grid gap-5 sm:mt-6 sm:gap-8 md:grid-cols-[minmax(0,18rem)_1fr]">
           <PhotoDropzone preview={photo?.dataUrl ?? null} onFile={handleFile} />
 
           {result ? (
@@ -142,7 +142,7 @@ export default function FitCheckModal({
           ) : (
             <div className="space-y-4">
               {profile && (
-                <div className="flex items-center justify-between gap-3 border border-accent/30 bg-accent/5 px-3 py-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-3 border border-accent/30 bg-accent/5 px-3 py-2.5">
                   <p className="text-sm text-stone-700">
                     We remember your measurements from last time.
                   </p>
@@ -166,7 +166,7 @@ export default function FitCheckModal({
                 Use a full-length photo facing the camera in good light, with just you in frame.
                 Add measurements for a sharper recommendation.
               </p>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 <label className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                   Height (ft)
                   <input value={feet} onChange={(e) => setFeet(e.target.value)} inputMode="numeric" placeholder="5" className={`${FIELD} mt-1`} />
@@ -197,7 +197,7 @@ export default function FitCheckModal({
                       key={p}
                       type="button"
                       onClick={() => setPreference(p)}
-                      className={`flex-1 border px-3 py-2 text-sm font-medium capitalize transition ${
+                      className={`min-h-11 flex-1 border px-2 py-2 text-sm font-medium capitalize transition ${
                         preference === p ? "border-black bg-black text-white" : "border-stone-300 hover:border-black"
                       }`}
                     >
@@ -208,12 +208,12 @@ export default function FitCheckModal({
               </fieldset>
               {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
               {loading && (
-                <p className="text-xs text-stone-500">This can take up to a minute on the first photo.</p>
+                <p className="text-xs text-stone-500">Usually takes a few seconds.</p>
               )}
               <button
                 onClick={handleSubmit}
                 disabled={!photo || loading}
-                className="w-full rounded-full bg-black px-4 py-3 font-semibold uppercase tracking-wide text-white transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+                className="w-full rounded-full bg-black px-4 py-3.5 font-semibold uppercase tracking-wide text-white transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {loading ? "Analysing your fit…" : "Check my fit"}
               </button>

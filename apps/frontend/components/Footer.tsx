@@ -12,7 +12,7 @@ export default function Footer() {
   return (
     <footer data-header-theme="dark" className="footer-gold text-gunmetal-100">
       <div className="rule-gold" />
-      <div className="mx-auto max-w-6xl px-6 py-14">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr]">
           <div>
             <div className="flex items-center gap-3">

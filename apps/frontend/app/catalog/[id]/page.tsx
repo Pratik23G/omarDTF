@@ -15,7 +15,7 @@ export default async function ProductDetailPage({
   const reviews = await getReviews(id).catch(() => []);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
+    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <ProductDetail product={product} />
       <ProductReviews productId={product.id} initialReviews={reviews} />
     </main>

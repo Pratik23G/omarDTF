@@ -27,12 +27,12 @@ export default function PhotoDropzone({
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`flex aspect-[3/4] cursor-pointer flex-col items-center justify-center overflow-hidden border-2 border-dashed text-center transition ${
+      className={`flex aspect-[4/3] max-h-64 w-full cursor-pointer md:aspect-[3/4] md:max-h-none flex-col items-center justify-center overflow-hidden border-2 border-dashed text-center transition ${
         dragging ? "border-black bg-stone-200" : "border-stone-300 bg-stone-100 hover:border-black"
       }`}
     >
       {preview ? (
-        <img src={preview} alt="Your photo" className="h-full w-full object-cover" />
+        <img src={preview} alt="Your photo" className="h-full w-full object-contain md:object-cover" />
       ) : (
         <span className="px-4">
           <span className="block font-display text-lg font-semibold uppercase tracking-wide">

@@ -3,7 +3,7 @@ import type { FitCheckMediaType, FitCheckResult, Product } from "@omardtf/shared
 
 const GEMINI_HOST = "https://generativelanguage.googleapis.com";
 const GEMINI_MODEL = process.env.GEMINI_FIT_MODEL ?? "gemini-flash-latest";
-const REQUEST_TIMEOUT_MS = 60_000;
+const REQUEST_TIMEOUT_MS = 30_000;
 const MAX_CONCURRENT = 2;
 
 const SYSTEM_PROMPT = `You are the size assistant for OMARDTF, a custom apparel print shop.
@@ -161,6 +161,8 @@ ${describeCustomer(input)}`,
       ],
       generationConfig: {
         temperature: 0.2,
+        maxOutputTokens: 700,
+        thinkingConfig: { thinkingBudget: 0 },
         responseMimeType: "application/json",
         responseSchema: buildJsonSchema(product.sizes),
       },
