@@ -10,17 +10,20 @@ import type {
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
+// Server-rendered pages wait on these calls, so a stalled API must fail fast instead of hanging the page.
+const READ_TIMEOUT_MS = 8000;
+
 export async function getProducts(category?: string): Promise<Product[]> {
   const url = category
     ? `${API_URL}/products?category=${encodeURIComponent(category)}`
     : `${API_URL}/products`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(READ_TIMEOUT_MS) });
   if (!res.ok) throw new Error(`Failed to fetch products: ${res.status}`);
   return res.json();
 }
 
 export async function getProduct(id: string): Promise<Product | null> {
-  const res = await fetch(`${API_URL}/products/${id}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/products/${id}`, { cache: "no-store", signal: AbortSignal.timeout(READ_TIMEOUT_MS) });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to fetch product ${id}: ${res.status}`);
   return res.json();

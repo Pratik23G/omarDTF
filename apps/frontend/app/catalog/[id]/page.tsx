@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import ApiUnavailable from "@/components/ApiUnavailable";
 import ProductReviews from "@/components/reviews/ProductReviews";
 import { getProduct, getReviews } from "@/lib/api";
 import ProductDetail from "./ProductDetail";
@@ -9,7 +10,14 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await getProduct(id);
+  const product = await getProduct(id).catch(() => undefined);
+  if (product === undefined) {
+    return (
+      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
+        <ApiUnavailable what="this product" />
+      </main>
+    );
+  }
   if (!product) notFound();
 
   const reviews = await getReviews(id).catch(() => []);
