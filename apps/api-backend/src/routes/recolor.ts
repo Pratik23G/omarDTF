@@ -7,6 +7,7 @@ import { RecolorBusyError, RecolorUnavailableError, runRecolor } from "../servic
 export const recolor = new Hono();
 
 const perClient = createRateLimiter(10 * 60 * 1000, 10);
+const perDay = createRateLimiter(24 * 60 * 60 * 1000, Number(process.env.RECOLOR_DAILY_LIMIT ?? 100));
 const isProd = process.env.NODE_ENV === "production";
 
 const requestSchema = z.object({
@@ -25,7 +26,7 @@ recolor.post("/", async (c) => {
   if (!product) return c.json({ error: "Product not found" }, 404);
 
   const client = clientKey(c);
-  if (!perClient(client)) {
+  if (!perClient(client) || !perDay("all")) {
     return c.json({ error: "Too many recolor requests right now. Please try again later." }, 429);
   }
 

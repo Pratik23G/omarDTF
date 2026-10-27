@@ -3,9 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Product } from "@omardtf/shared-types";
 import { sniffImageType } from "../lib/image-type.js";
+import { createTtlCache } from "../lib/ttl-cache.js";
 
 const GEMINI_HOST = "https://generativelanguage.googleapis.com";
-const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash-image";
+// Cheapest Gemini image-edit model (~$0.034/image, billing required; 2.5-flash-image shut down Oct 2026).
+const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite-image";
 const REQUEST_TIMEOUT_MS = 60_000;
 const MAX_CONCURRENT = 2;
 
@@ -16,6 +18,9 @@ export class RecolorUnavailableError extends Error {}
 export class RecolorBusyError extends Error {}
 
 let inFlight = 0;
+
+// Same product + color is the common case; reuse the paid result for a day. Kept small: each entry is ~1 MB.
+const resultCache = createTtlCache<{ image: string }>(24 * 60 * 60 * 1000, 30);
 
 /**
  * Reads a product photo directly off disk for local paths (apps/frontend/public/...) instead of
@@ -50,7 +55,7 @@ async function fetchSourceImage(imagePath: string): Promise<{ mediaType: string;
 
 /**
  * Fetches the product's photo and sends it to Google's Gemini image model
- * (free tier, no card required — sign up at aistudio.google.com/apikey) with
+ * (paid only: Google gives image models no free quota) with
  * an instruction to recolor only the garment and keep the printed design,
  * then returns the edited image.
  */
@@ -58,14 +63,18 @@ export async function runRecolor(input: { product: Product; targetColor: string 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new RecolorUnavailableError(
-      "AI recolor isn't configured yet. Set GEMINI_API_KEY (free at aistudio.google.com/apikey) to enable it.",
+      "AI recolor isn't configured yet. Set GEMINI_API_KEY (image models need billing enabled) to enable it.",
     );
   }
+
+  const { product, targetColor } = input;
+  const cacheKey = `${product.id}:${targetColor.trim().toLowerCase()}`;
+  const cached = resultCache.get(cacheKey);
+  if (cached) return cached;
 
   if (inFlight >= MAX_CONCURRENT) throw new RecolorBusyError("Recolor is busy");
   inFlight += 1;
   try {
-    const { product, targetColor } = input;
     const source = await fetchSourceImage(product.images[0]);
 
     const prompt = `Recolor only the ${product.category.toLowerCase()} garment in this photo to ${targetColor}. Keep the printed design, logo text, background, lighting and shadows exactly as they are — change nothing but the fabric color. Return only the edited image.`;
@@ -116,7 +125,9 @@ export async function runRecolor(input: { product: Product; targetColor: string 
     const imagePart = data.candidates?.[0]?.content?.parts?.find((p) => p.inlineData);
     if (!imagePart?.inlineData) throw new Error("Recolor model didn't return an image");
 
-    return { image: `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}` };
+    const result = { image: `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}` };
+    resultCache.set(cacheKey, result);
+    return result;
   } finally {
     inFlight -= 1;
   }
